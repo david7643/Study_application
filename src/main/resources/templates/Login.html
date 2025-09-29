@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>로그인</title>
+  <style>
+    /* 페이지 전체 스타일 */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    /* 로그인 폼 컨테이너 스타일 */
+    .login-container {
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    /* 폼 제목 스타일 */
+    .login-container h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 25px;
+    }
+
+    /* 입력 필드 그룹 스타일 */
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    /* 라벨 스타일 */
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #555;
+    }
+
+    /* 입력창 스타일 */
+    .form-group input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box; /* 패딩과 테두리가 너비에 포함되도록 설정 */
+    }
+
+    /* 체크박스 그룹 스타일 */
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .checkbox-group input {
+      margin-right: 10px;
+    }
+
+    .checkbox-group label {
+      margin: 0;
+      font-weight: normal;
+      color: #666;
+    }
+
+    /* 로그인 버튼 스타일 */
+    .btn-login {
+      width: 100%;
+      padding: 12px;
+      background-color: #007bff;
+      border: none;
+      border-radius: 4px;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    /* 버튼에 마우스를 올렸을 때 스타일 */
+    .btn-login:hover {
+      background-color: #0056b3;
+    }
+
+    /* --- 추가된 스타일 --- */
+    /* 추가 링크 영역 스타일 */
+    .extra-links {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .extra-links a {
+      text-decoration: none;
+      color: #666;
+      font-size: 14px;
+      margin: 0 5px; /* 링크 사이의 좌우 여백 */
+    }
+
+    .extra-links a:hover {
+      text-decoration: underline;
+    }
+
+    .extra-links span {
+      color: #ccc;
+      margin: 0 5px;
+    }
+    /* --- /추가된 스타일 --- */
+  </style>
+</head>
+<body>
+
+<div class="login-container">
+  <h1>로그인</h1>
+  <form action="/login-process" method="post">
+    <div class="form-group">
+      <label for="username">아이디</label>
+      <input type="text" id="username" name="username" placeholder="아이디를 입력하세요" required>
+    </div>
+
+    <div class="form-group">
+      <label for="password">비밀번호</label>
+      <input type="password" id="password" name="password" placeholder="비밀번호를 입력하세요" required>
+    </div>
+
+    <div class="checkbox-group">
+      <input type="checkbox" id="remember-me" name="remember-me" value="true">
+      <label for="remember-me">로그인 유지</label>
+    </div>
+
+    <button type="submit" class="btn-login">로그인</button>
+
+    <div class="extra-links">
+      <a href="/register">회원가입</a>
+      <span>|</span>
+      <a href="/find-id">아이디 찾기</a>
+      <span>|</span>
+      <a href="/find-password">비밀번호 찾기</a>
+    </div>
+  </form>
+</div>
+
+</body>
+</html>

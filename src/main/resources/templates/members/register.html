@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>회원가입</title>
+  <style>
+    /* 이전 예제와 동일한 스타일 */
+    body { font-family: Arial, sans-serif; background-color: #f4f4f9; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px 0; }
+    .signup-container { background-color: #ffffff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); width: 100%; max-width: 450px; }
+    h1 { text-align: center; color: #333; margin-bottom: 25px; }
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display: block; margin-bottom: 8px; font-weight: bold; color: #555; }
+    .form-group input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+    .message { font-size: 13px; margin-top: 8px; height: 15px; /* 메시지 영역 높이 고정 */ }
+    .message.success { color: green; }
+    .message.error { color: red; }
+    .btn-signup { width: 100%; padding: 12px; background-color: #28a745; border: none; border-radius: 4px; color: white; font-size: 16px; font-weight: bold; cursor: pointer; }
+  </style>
+</head>
+<body>
+
+<div class="signup-container">
+  <h1>회원가입</h1>
+  <form id="registerForm" action="/register-process" method="post">
+    <div class="form-group">
+      <label for="loginId">아이디</label>
+      <input type="text" id="loginId" name="loginId" placeholder="사용할 아이디를 입력하세요" required>
+      <div id="idCheckMessage" class="message"></div>
+    </div>
+
+    <div class="form-group">
+      <label for="password">비밀번호</label>
+      <input type="password" id="password" name="password" placeholder="비밀번호를 입력하세요" required>
+    </div>
+
+    <div class="form-group">
+      <label for="passwordConfirm">비밀번호 확인</label>
+      <input type="password" id="passwordConfirm" name="passwordConfirm" placeholder="비밀번호를 다시 입력하세요" required>
+      <div id="passwordConfirmMessage" class="message"></div>
+    </div>
+
+    <button type="submit" class="btn-signup">가입하기</button>
+  </form>
+</div>
+
+<script>
+  // --- 아이디 중복 검사 로직 (기존과 동일) ---
+  const loginIdInput = document.getElementById('loginId');
+  loginIdInput.addEventListener('blur', async function() {
+    // ... (이전과 동일한 아이디 중복 검사 코드) ...
+    const loginId = this.value;
+    const messageDiv = document.getElementById('idCheckMessage');
+    if (!loginId) {
+      messageDiv.textContent = '';
+      return;
+    }
+    try {
+      const response = await fetch(`/api/members/check-id?loginId=${loginId}`);
+      const data = await response.json();
+      if (data.isAvailable) {
+        messageDiv.textContent = '사용 가능한 아이디입니다.';
+        messageDiv.className = 'message success';
+      } else {
+        messageDiv.textContent = '이미 사용 중인 아이디입니다.';
+        messageDiv.className = 'message error';
+      }
+    } catch (error) {
+      console.error('ID 중복 확인 중 오류 발생:', error);
+      messageDiv.textContent = '오류가 발생했습니다. 다시 시도해주세요.';
+      messageDiv.className = 'message error';
+    }
+  });
+
+  // --- 비밀번호 일치 확인 로직 (새로 추가) ---
+  const passwordInput = document.getElementById('password');
+  const passwordConfirmInput = document.getElementById('passwordConfirm');
+  const passwordConfirmMessageDiv = document.getElementById('passwordConfirmMessage');
+
+  function validatePassword() {
+    const password = passwordInput.value;
+    const confirmPassword = passwordConfirmInput.value;
+
+    // 비밀번호 확인 필드에 값이 있을 때만 메시지를 표시
+    if (confirmPassword) {
+      if (password === confirmPassword) {
+        passwordConfirmMessageDiv.textContent = '비밀번호가 일치합니다.';
+        passwordConfirmMessageDiv.className = 'message success';
+      } else {
+        passwordConfirmMessageDiv.textContent = '비밀번호가 일치하지 않습니다.';
+        passwordConfirmMessageDiv.className = 'message error';
+      }
+    } else {
+      passwordConfirmMessageDiv.textContent = ''; // 비어있으면 메시지 없음
+    }
+  }
+
+  // 두 비밀번호 필드 중 하나라도 키보드 입력이 발생하면 검사 함수를 실행
+  passwordInput.addEventListener('keyup', validatePassword);
+  passwordConfirmInput.addEventListener('keyup', validatePassword);
+
+</script>
+
+</body>
+</html>
