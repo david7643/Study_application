@@ -22,8 +22,14 @@ public class MemberController {
     @PostMapping(value = "/register-process")
     public String create(MemberForm form) {
         Member member = new Member();
+        // MemberForm 객체에서 받은 데이터를 Member 도메인 객체로 변환
+        // JdbcTemplateMemberRepository의 Member 객체 필드명과 일치시킴
+        member.setUserid(form.getUserid());
         member.setPw(form.getPw());
-        memberService.join(member);
+        member.setName(form.getName());
+        member.setEmail(form.getEmail());
+        member.setPhone(form.getPhone());
+        // 모든 정보가 담긴 member 객체를 서비스 계층으로 전달하여 회원가입 처리
         return "redirect:/";
     }
 }

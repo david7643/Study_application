@@ -1,20 +1,18 @@
 package Android_Project.Study_application.domain;
 
+import lombok.Getter;
+import lombok.Setter;
+
+import java.time.LocalDateTime;
+
+@Getter
+@Setter
 public class Member {
     private Long id;
+    private String userid;
     private String pw;
-
-    public Long getId() {
-        return id;
-    }
-    public void setId(Long id) {
-        this.id = id;
-    }
-    public String getPw() {
-        return pw;
-    }
-
-    public void setPw(String pw) {
-        this.pw = pw;
-    }
+    private String name;
+    private String email;
+    private String phone;
+    private LocalDateTime joinDate;
 }
