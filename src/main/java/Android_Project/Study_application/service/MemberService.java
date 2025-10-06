@@ -12,9 +12,8 @@ import java.util.Optional;
 public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
-
     @Autowired
-    public MemberService(MemberRepository memberRepository ,PasswordEncoder passwordEncoder) {
+    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder) {
         this.memberRepository = memberRepository;
         this.passwordEncoder = passwordEncoder;
     }
@@ -34,7 +33,7 @@ public class MemberService {
                 });
     }
 
-    public List<Member> findMembers() {
+    public List<Member> findAll() {
         return memberRepository.findAll();
     }
 

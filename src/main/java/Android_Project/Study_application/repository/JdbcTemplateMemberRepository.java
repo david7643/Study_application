@@ -1,19 +1,19 @@
 package Android_Project.Study_application.repository;
 
 import Android_Project.Study_application.domain.Member;
-import org.springframework.context.annotation.Primary;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-@Primary
+@Repository
 public class JdbcTemplateMemberRepository implements MemberRepository{
     private final JdbcTemplate jdbcTemplate;
 
@@ -24,12 +24,12 @@ public class JdbcTemplateMemberRepository implements MemberRepository{
     @Override
     public Member save(Member member) {
         SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
-        jdbcInsert.withTableName("users").usingGeneratedKeyColumns("id");
+        jdbcInsert.withTableName("users").usingGeneratedKeyColumns("user_id");
 
         Map<String, Object> parameters = new HashMap<>();
         // 모든 필드를 파라미터로 추가
         parameters.put("user_id", member.getUserid());
-        parameters.put("password_hash", member.getPw()); // 중요: 실제로는 비밀번호를 암호화해서 저장해야 합니다.
+        parameters.put("password_hash", member.getPw());
         parameters.put("username", member.getName());
         parameters.put("email", member.getEmail());
         parameters.put("phone_number", member.getPhone());

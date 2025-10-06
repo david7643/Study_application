@@ -17,7 +17,7 @@ public class MemberController {
     }
     @GetMapping(value = "/register")
     public String createForm() {
-        return "members/register";
+        return "/members/register";
     }
     @PostMapping(value = "/register-process")
     public String create(MemberForm form) {
@@ -30,6 +30,7 @@ public class MemberController {
         member.setEmail(form.getEmail());
         member.setPhone(form.getPhone());
         // 모든 정보가 담긴 member 객체를 서비스 계층으로 전달하여 회원가입 처리
+        memberService.join(member);
         return "redirect:/";
     }
 }
