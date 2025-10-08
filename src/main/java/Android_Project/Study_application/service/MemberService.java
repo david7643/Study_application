@@ -39,5 +39,16 @@ public class MemberService {
 
     public Optional<Member> findOne(String userId) {
         return memberRepository.findByUserId(userId);
+
+    }
+
+    public Optional<Member> Login(String userId, String password) {
+        // 1. 아이디로 회원을 조회합니다.
+        Optional<Member> memberOptional = memberRepository.findByUserId(userId);
+        // 2. 조회된 회원이 있고, 비밀번호가 일치하는지 확인합니다.
+        return memberOptional.filter(member ->
+                // passwordEncoder.matches(평문 비밀번호, 암호화된 비밀번호)
+                passwordEncoder.matches(password, member.getPw())
+        );
     }
 }

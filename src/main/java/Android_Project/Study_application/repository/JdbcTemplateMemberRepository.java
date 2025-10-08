@@ -24,7 +24,7 @@ public class JdbcTemplateMemberRepository implements MemberRepository{
     @Override
     public Member save(Member member) {
         SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
-        jdbcInsert.withTableName("users").usingGeneratedKeyColumns("user_id");
+        jdbcInsert.withTableName("users").usingGeneratedKeyColumns("id");
 
         Map<String, Object> parameters = new HashMap<>();
         // 모든 필드를 파라미터로 추가
@@ -34,8 +34,7 @@ public class JdbcTemplateMemberRepository implements MemberRepository{
         parameters.put("email", member.getEmail());
         parameters.put("phone_number", member.getPhone());
 
-        Number key = jdbcInsert.executeAndReturnKey(new
-                MapSqlParameterSource(parameters));
+        Number key = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters));
         member.setId(key.longValue());
         return member;
     }
@@ -74,9 +73,6 @@ public class JdbcTemplateMemberRepository implements MemberRepository{
             member.setName(rs.getString("username"));
             member.setEmail(rs.getString("email"));
             member.setPhone(rs.getString("phone_number"));
-            if (rs.getTimestamp("join_date") != null) {
-                member.setJoinDate(rs.getTimestamp("join_date").toLocalDateTime());
-            }
             return member;
         };
     }
