@@ -41,7 +41,9 @@ public class MemberService {
         return memberRepository.findByUserId(userId);
 
     }
-
+    public boolean isUserIdExists(String userId) {
+        return memberRepository.findByUserId(userId).isPresent();
+    }
     public Optional<Member> Login(String userId, String password) {
         // 1. 아이디로 회원을 조회합니다.
         Optional<Member> memberOptional = memberRepository.findByUserId(userId);

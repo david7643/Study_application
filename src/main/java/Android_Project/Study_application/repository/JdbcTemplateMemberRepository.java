@@ -24,7 +24,8 @@ public class JdbcTemplateMemberRepository implements MemberRepository{
     @Override
     public Member save(Member member) {
         SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
-        jdbcInsert.withTableName("users").usingGeneratedKeyColumns("id");
+        jdbcInsert.withTableName("users").usingGeneratedKeyColumns("id")
+                .usingColumns("user_id", "password_hash", "username", "email", "phone_number", "email_verified");
 
         Map<String, Object> parameters = new HashMap<>();
         // 모든 필드를 파라미터로 추가
@@ -33,7 +34,7 @@ public class JdbcTemplateMemberRepository implements MemberRepository{
         parameters.put("username", member.getName());
         parameters.put("email", member.getEmail());
         parameters.put("phone_number", member.getPhone());
-
+        parameters.put("email_verified", member.isEmailVerified());
         Number key = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters));
         member.setId(key.longValue());
         return member;
@@ -58,6 +59,20 @@ public class JdbcTemplateMemberRepository implements MemberRepository{
             return Optional.empty();
         }
     }
+    @Override
+    public Optional<Member> findByEmail(String email) {
+        try {
+            Member member = jdbcTemplate.queryForObject("select * from users where email = ?", memberRowMapper(), email);
+            return Optional.ofNullable(member);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public void updateEmailVerified(String email) {
+        jdbcTemplate.update("UPDATE users SET email_verified = true WHERE email = ?", email);
+    }
 
     @Override
     public List<Member> findAll() {
@@ -73,6 +88,7 @@ public class JdbcTemplateMemberRepository implements MemberRepository{
             member.setName(rs.getString("username"));
             member.setEmail(rs.getString("email"));
             member.setPhone(rs.getString("phone_number"));
+            member.setEmailVerified(rs.getBoolean("email_verified"));
             return member;
         };
     }
