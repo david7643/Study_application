@@ -22,7 +22,7 @@ public class JdbcTemplateMemberRepository implements MemberRepository{
     }
 
     @Override
-    public Member save(Member member) {
+    public void save(Member member) {
         SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
         jdbcInsert.withTableName("users").usingGeneratedKeyColumns("id");
 
@@ -36,7 +36,6 @@ public class JdbcTemplateMemberRepository implements MemberRepository{
 
         Number key = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters));
         member.setId(key.longValue());
-        return member;
     }
 
     @Override

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 @Repository
 public interface MemberRepository {
-    Member save(Member member);
+    void save(Member member);
     Optional<Member> findByUserId(String userid);
     Optional<Member> findByUserName(String name);
     List<Member> findAll();

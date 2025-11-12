@@ -23,14 +23,15 @@ public class MemberController {
     public MemberController(MemberService memberService) {
         this.memberService = memberService;
     }
+
     @GetMapping(value = "/register")
     public String createForm() {
         return "/members/register";
     }
+
     @PostMapping(value = "/login-process")
     public String loginProcess(@ModelAttribute LoginForm loginform, HttpServletRequest request, RedirectAttributes rttr) {
         Optional<Member> loginMemberOptional = memberService.Login(loginform.getUserid(), loginform.getPw());
-
         // 2. 로그인 실패 처리
         if (loginMemberOptional.isEmpty()) {
             rttr.addAttribute("error", true);
@@ -43,6 +44,7 @@ public class MemberController {
         session.setAttribute("loginMember", loginMember);
         return "redirect:/";
     }
+
     @PostMapping(value = "/register-process")
     public String create(@ModelAttribute RegisterForm registerform) {
         Member member = new Member();
@@ -54,10 +56,12 @@ public class MemberController {
         memberService.join(member);
         return "redirect:/";
     }
+
     @GetMapping("/login form")
     public String loginForm() {
         return "Login";
     }
+
     @GetMapping("/login fail")
     public String loginFail() {
         return "Login";
