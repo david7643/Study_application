@@ -1,14 +1,22 @@
 package Android_Project.Study_application.controller;
 
+import Android_Project.Study_application.domain.Member;
+import Android_Project.Study_application.dto.FindIdRequestDto;
+import Android_Project.Study_application.dto.SendCodeRequest;
+import Android_Project.Study_application.dto.VerifyCodeRequest;
+import Android_Project.Study_application.repository.MemberRepository;
 import Android_Project.Study_application.service.EmailAuthService;
 import Android_Project.Study_application.service.EmailService;
-import Android_Project.Study_application.service.RedisService;
+import Android_Project.Study_application.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Optional;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -16,10 +24,10 @@ public class EmailController {
 
     private final EmailService emailService;
     private final EmailAuthService emailAuthService;
-
+    private final MemberService memberService;
     @PostMapping("/api/email/send-code")
-    public ResponseEntity<String> sendVerificationCode(@RequestParam("email") String email) {
-
+    public ResponseEntity<String> sendVerificationCode(@RequestBody SendCodeRequest request) {
+        String email = request.getEmail();
         try {
             // 1. (EmailService) 인증번호 생성
             String code = emailService.createVerificationCode();
@@ -39,7 +47,9 @@ public class EmailController {
         }
     }
     @PostMapping("/api/email/verify-code")
-    public ResponseEntity<String> verifyCode(@RequestParam("code") String code, @RequestParam("email") String email) {
+    public ResponseEntity<String> verifyCode(@RequestBody VerifyCodeRequest request) {
+        String email = request.getEmail(); // DTO에서 이메일 추출
+        String code = request.getVerificationCode(); // DTO에서 인증번호 추출 (필드명 주의!)
         try {
             if(emailAuthService.verifyCode(email, code)) {
                 emailAuthService.deleteCode(email);
@@ -52,5 +62,13 @@ public class EmailController {
             log.error("인증 실패. Email: {}", email, e);
             return ResponseEntity.status(500).body("인증 중 오류가 발생했습니다.");
         }
+    }
+
+    @PostMapping(value = "/find-id")
+    public Optional<Member> findId(@RequestBody FindIdRequestDto request) {
+        memberService.findOne(request.getUserid());
+        if(memberService.findOne(request.getUserid()).isPresent())
+            return Optional.of(memberService.findOne(request.getUserid()).get());
+        return Optional.empty();
     }
 }
